@@ -10,7 +10,7 @@ var app = new Vue({
         var self = this;
         self.scanner = new Instascan.Scanner({
             video: document.getElementById('preview'),
-            scanPeriod: 6,
+            scanPeriod: 5,
             mirror:false,//不用镜像
         });
         self.scanner.addListener('scan', function (content, image) {
@@ -20,7 +20,7 @@ var app = new Vue({
             .then(function (cameras) {
                 self.cameras = cameras;
                 for (let c of cameras) {
-                    alert(c.name + 5);
+                    alert(c.name + 6);
                 }
                 if (cameras.length > 0) {
                     self.activeCameraId = cameras[0].id;
