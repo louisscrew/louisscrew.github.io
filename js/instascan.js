@@ -30952,16 +30952,15 @@ var Camera = function () {
         value: function start() {
             var _this2 = this;
 
-            var constraints;
+            var type, constraints;
             return regeneratorRuntime.async(function start$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
                         case 0:
-                          alert(this.type+4)
+                            type = this.type;
                             constraints = {
                                 audio: false,
                                 video: {
-                                    facingMode: { exact: "user" },
                                     mandatory: {
                                         sourceId: this.id,
                                         minWidth: 600,
@@ -30971,7 +30970,12 @@ var Camera = function () {
                                     optional: []
                                 }
                             };
-                            _context2.next = 3;
+
+
+                            if (type !== "") {
+                                constraints.facingMode = { exact: type };
+                            }
+                            _context2.next = 5;
                             return regeneratorRuntime.awrap(Camera._wrapErrors(function _callee() {
                                 return regeneratorRuntime.async(function _callee$(_context) {
                                     while (1) {
@@ -30991,11 +30995,11 @@ var Camera = function () {
                                 }, null, _this2);
                             }));
 
-                        case 3:
+                        case 5:
                             this._stream = _context2.sent;
                             return _context2.abrupt('return', this._stream);
 
-                        case 5:
+                        case 7:
                         case 'end':
                             return _context2.stop();
                     }
@@ -31039,7 +31043,7 @@ var Camera = function () {
     }], [{
         key: 'getCameras',
         value: function getCameras() {
-            var devices;
+            var devices, videos, vnums;
             return regeneratorRuntime.async(function getCameras$(_context3) {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
@@ -31053,18 +31057,25 @@ var Camera = function () {
 
                         case 4:
                             devices = _context3.sent;
-                            return _context3.abrupt('return', devices.filter(function (d) {
+                            videos = devices.filter(function (d) {
                                 return d.kind === 'videoinput';
-                            }).map(function (d) {
+                            }); //得到所有视频设备
+
+                            vnums = videos.length; //得到视频设备数量
+
+                            return _context3.abrupt('return', videos.map(function (d) {
                                 var dLabel = cameraName(d.label);
-                                var type = "user";
-                                if (dLabel.includes('back') || dLabel.includes('后')) {
-                                    type = "environment";
+                                var type = "";
+                                if (vnums > 1) {
+                                    type = "user";
+                                    if (dLabel.includes('back') || dLabel.includes('后')) {
+                                        type = "environment";
+                                    }
                                 }
                                 return new Camera(d.deviceId, cameraName(d.label), type);
                             }));
 
-                        case 6:
+                        case 8:
                         case 'end':
                             return _context3.stop();
                     }
