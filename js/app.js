@@ -19,11 +19,11 @@ var app = new Vue({
             .then(function (cameras) {
                 self.cameras = cameras;
                 for (let c of cameras) {
-                    alert(c.name + 3);
+                    alert(c.name + 4);
                 }
                 if (cameras.length > 0) {
-                    self.activeCameraId = cameras[0].id;
-                    self.scanner.start(cameras[0]);
+                    self.activeCameraId = cameras[1].id;
+                    self.scanner.start(cameras[1]);
                 } else {
                     console.error('No cameras found.');
                 }
