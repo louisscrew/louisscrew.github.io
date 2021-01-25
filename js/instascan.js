@@ -30957,6 +30957,7 @@ var Camera = function () {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
                         case 0:
+                          alert(this.type)
                             constraints = {
                                 audio: false,
                                 video: {
