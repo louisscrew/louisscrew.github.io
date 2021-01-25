@@ -18,8 +18,8 @@ var app = new Vue({
           alert(c.name)
         }
         if (cameras.length > 0) {
-          self.activeCameraId = cameras[0].id;
-          self.scanner.start(cameras[0]);
+          self.activeCameraId = cameras[1].id;
+          self.scanner.start(cameras[1]);
         } else {
           console.error('No cameras found.');
         }
