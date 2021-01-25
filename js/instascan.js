@@ -30973,7 +30973,7 @@ var Camera = function () {
 
 
                             if (type !== "") {
-                                constraints.facingMode = { exact: type };
+                                constraints.video.facingMode = { exact: type };
                             }
                             _context2.next = 5;
                             return regeneratorRuntime.awrap(Camera._wrapErrors(function _callee() {
@@ -31467,7 +31467,7 @@ var Scanner = function (_EventEmitter) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              console.log(camera.type);
+              alert(camera.type);
 
               if (!this._fsm.can('start')) {
                 _context.next = 6;
