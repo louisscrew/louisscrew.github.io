@@ -20,7 +20,7 @@ var app = new Vue({
             .then(function (cameras) {
                 self.cameras = cameras;
                 for (let c of cameras) {
-                    alert(c.name + 6);
+                    alert(c.name + 1);
                 }
                 if (cameras.length > 0) {
                     self.activeCameraId = cameras[0].id;

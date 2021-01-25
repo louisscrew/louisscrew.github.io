@@ -31467,27 +31467,29 @@ var Scanner = function (_EventEmitter) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              console.log(camera.type);
+
               if (!this._fsm.can('start')) {
-                _context.next = 5;
+                _context.next = 6;
                 break;
               }
 
-              _context.next = 3;
+              _context.next = 4;
               return regeneratorRuntime.awrap(this._fsm.start(camera));
 
-            case 3:
-              _context.next = 9;
+            case 4:
+              _context.next = 10;
               break;
 
-            case 5:
-              _context.next = 7;
+            case 6:
+              _context.next = 8;
               return regeneratorRuntime.awrap(this._fsm.stop());
 
-            case 7:
-              _context.next = 9;
+            case 8:
+              _context.next = 10;
               return regeneratorRuntime.awrap(this._fsm.start(camera));
 
-            case 9:
+            case 10:
             case 'end':
               return _context.stop();
           }
