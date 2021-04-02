@@ -23,6 +23,9 @@ var app = new Vue({
                 console.log(cameras)
                 if (cameras.length > 1) {//取后置摄像头
                     alert("多个摄像头")
+                    for(let c of cameras){
+                        alert(JSON.stringify({c}))
+                    }
                     let tmpCamera = self.cameras.find((ca) => {
                         alert("摄像头 type:"+ca.type)
                         return ca.type === 'environment'
