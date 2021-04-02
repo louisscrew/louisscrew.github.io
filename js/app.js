@@ -27,8 +27,7 @@ var app = new Vue({
                         alert(JSON.stringify({c}))
                     }
                     let tmpCamera = self.cameras.find((ca) => {
-                        alert("摄像头 type:"+ca.type)
-                        return ca.type === 'environment'
+                        return ca.name.includes("后置")===true || ca.name.includes("Back")===true
                     })
                     if (tmpCamera) {
                         self.activeCamera = tmpCamera
