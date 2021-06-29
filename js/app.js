@@ -20,12 +20,11 @@ var app = new Vue({
         Instascan.Camera.getCameras()
             .then(function (cameras) {
                 self.cameras = cameras
-                console.log(cameras)
+                for(let c of cameras){
+                    alert(JSON.stringify({c}))
+                }
                 if (cameras.length > 1) {//取后置摄像头
-                    alert("多个摄像头11")
-                    for(let c of cameras){
-                        alert(JSON.stringify({c}))
-                    }
+                    alert("多个摄像头22")
                     let tmpCamera = self.cameras.find((ca) => {
                         return ca.name.includes("后置")===true || ca.name.includes("Back")===true
                     })
