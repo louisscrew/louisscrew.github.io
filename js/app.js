@@ -22,7 +22,7 @@ var app = new Vue({
                 self.cameras = cameras
                 console.log(cameras)
                 if (cameras.length > 1) {//取后置摄像头
-                    alert("多个摄像头")
+                    alert("多个摄像头11")
                     for(let c of cameras){
                         alert(JSON.stringify({c}))
                     }
@@ -33,7 +33,7 @@ var app = new Vue({
                         self.activeCamera = tmpCamera
                     }
                 } else if (cameras.length === 1) {//一个摄像头
-                    alert("只有一个摄像头")
+                    alert("只有一个摄像头22")
                     self.activeCamera = cameras[0]
                 } else {
                     alert("meiyou shexiangtou ")
