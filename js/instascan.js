@@ -34607,14 +34607,16 @@ var Scanner = function (_EventEmitter) {
         }],
         callbacks: {
           onenteractive: function onenteractive(options) {
+            var params;
             return regeneratorRuntime.async(function onenteractive$(_context4) {
               while (1) {
                 switch (_context4.prev = _context4.next) {
                   case 0:
-                    alert('111----' + options.args[0]);
-                    console.log(options.args[0], options.args[1]);
+                    params = options.args[0];
+
+                    console.log("1111" + params);
                     _context4.next = 4;
-                    return regeneratorRuntime.awrap(_this5._enableScan(options.args[0], options.args[1]));
+                    return regeneratorRuntime.awrap(_this5._enableScan(params.camera, params.cameraType));
 
                   case 4:
                     _this5.emit('active');
@@ -34631,14 +34633,16 @@ var Scanner = function (_EventEmitter) {
             _this5.emit('inactive');
           },
           onenteredstarted: function onenteredstarted(options) {
+            var params;
             return regeneratorRuntime.async(function onenteredstarted$(_context5) {
               while (1) {
                 switch (_context5.prev = _context5.next) {
                   case 0:
-                    _context5.next = 2;
-                    return regeneratorRuntime.awrap(_this5._fsm.activate(options.args[0]));
+                    params = options.args[0];
+                    _context5.next = 3;
+                    return regeneratorRuntime.awrap(_this5._fsm.activate(params.camera));
 
-                  case 2:
+                  case 3:
                   case 'end':
                     return _context5.stop();
                 }
