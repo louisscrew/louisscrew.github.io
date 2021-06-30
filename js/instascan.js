@@ -33943,7 +33943,7 @@ var Camera = function () {
   }], [{
     key: 'getCameras',
     value: function getCameras() {
-      var devices, res, i;
+      var devices, res, i, d;
       return regeneratorRuntime.async(function getCameras$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -33968,6 +33968,8 @@ var Camera = function () {
               if (devices.length >= 2) {
                 //第一个就是前置摄像头，最后一个就是后置摄像头
                 for (i = 0; i < devices.length; i++) {
+                  d = devices[i];
+
                   if (i === 0) {
                     res.push(new Camera(d.deviceId, 'Front'));
                   } else if (i === devices.length - 1) {
