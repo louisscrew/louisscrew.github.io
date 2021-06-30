@@ -33926,16 +33926,22 @@ var Camera = function () {
 
     _createClass(Camera, [{
         key: 'start',
-        value: function start() {
+        value: function start(camera) {
             var _this2 = this;
 
-            var camera = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "auto";
             var vopts, opts, constraints;
             return regeneratorRuntime.async(function start$(_context3) {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
                         case 0:
-                            vopts = narrowDownFacingMode(camera);
+                            if (!camera) {
+                                camera = "auto";
+                            }
+                            _context3.next = 3;
+                            return regeneratorRuntime.awrap(narrowDownFacingMode(camera));
+
+                        case 3:
+                            vopts = _context3.sent;
 
                             console.log(camera);
                             console.log(vopts);
@@ -33951,7 +33957,7 @@ var Camera = function () {
                             };
 
                             console.log(constraints);
-                            _context3.next = 9;
+                            _context3.next = 12;
                             return regeneratorRuntime.awrap(Camera._wrapErrors(function _callee2() {
                                 return regeneratorRuntime.async(function _callee2$(_context2) {
                                     while (1) {
@@ -33971,11 +33977,11 @@ var Camera = function () {
                                 }, null, _this2);
                             }));
 
-                        case 9:
+                        case 12:
                             this._stream = _context3.sent;
                             return _context3.abrupt('return', this._stream);
 
-                        case 11:
+                        case 14:
                         case 'end':
                             return _context3.stop();
                     }
