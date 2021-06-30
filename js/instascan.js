@@ -33936,6 +33936,9 @@ var Camera = function () {
                     switch (_context3.prev = _context3.next) {
                         case 0:
                             vopts = narrowDownFacingMode(camera);
+
+                            console.log(camera);
+                            console.log(vopts);
                             opts = {
                                 width: { min: 360, ideal: 640, max: 1920 },
                                 height: { min: 240, ideal: 480, max: 1080 }
@@ -33948,7 +33951,7 @@ var Camera = function () {
                             };
 
                             console.log(constraints);
-                            _context3.next = 7;
+                            _context3.next = 9;
                             return regeneratorRuntime.awrap(Camera._wrapErrors(function _callee2() {
                                 return regeneratorRuntime.async(function _callee2$(_context2) {
                                     while (1) {
@@ -33968,11 +33971,11 @@ var Camera = function () {
                                 }, null, _this2);
                             }));
 
-                        case 7:
+                        case 9:
                             this._stream = _context3.sent;
                             return _context3.abrupt('return', this._stream);
 
-                        case 9:
+                        case 11:
                         case 'end':
                             return _context3.stop();
                     }
