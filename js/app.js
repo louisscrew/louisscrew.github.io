@@ -40,6 +40,7 @@ var app = new Vue({
                 self.scanner.start(self.activeCamera)
             })
             .catch(function (e) {
+                alert(e)
                 console.error(e);
             });
     },
