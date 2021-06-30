@@ -34453,36 +34453,37 @@ var Scanner = function (_EventEmitter) {
     key: 'start',
     value: function start() {
       var camera = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-      var cameraType = arguments[1];
+      var cameraType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
       return regeneratorRuntime.async(function start$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              console.log("开始启动扫描");
               if (!cameraType) {
                 cameraType = "auto";
               }
 
               if (!this._fsm.can('start')) {
-                _context.next = 6;
+                _context.next = 7;
                 break;
               }
 
-              _context.next = 4;
+              _context.next = 5;
               return regeneratorRuntime.awrap(this._fsm.start(camera, cameraType));
 
-            case 4:
-              _context.next = 10;
+            case 5:
+              _context.next = 11;
               break;
 
-            case 6:
-              _context.next = 8;
+            case 7:
+              _context.next = 9;
               return regeneratorRuntime.awrap(this._fsm.stop());
 
-            case 8:
-              _context.next = 10;
+            case 9:
+              _context.next = 11;
               return regeneratorRuntime.awrap(this._fsm.start(camera, cameraType));
 
-            case 10:
+            case 11:
             case 'end':
               return _context.stop();
           }

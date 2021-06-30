@@ -9,7 +9,7 @@ var app = new Vue({
     },
     mounted: function () {
         var self = this;
-        alert("page start3")
+        alert("page start4")
         self.scanner = new Instascan.Scanner({
             video: document.getElementById('preview'),
             scanPeriod: 5,
@@ -22,7 +22,7 @@ var app = new Vue({
             .then(function (cameras) {
                 self.cameras = cameras
                 self.activeCamera = cameras[0]
-                self.scanner.start(self.activeCamera)
+                self.scanner.start(self.activeCamera,'rear')
             })
             .catch(function (e) {
                 alert('error message：'+e)
