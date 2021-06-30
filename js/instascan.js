@@ -34633,16 +34633,14 @@ var Scanner = function (_EventEmitter) {
             _this5.emit('inactive');
           },
           onenteredstarted: function onenteredstarted(options) {
-            var params;
             return regeneratorRuntime.async(function onenteredstarted$(_context5) {
               while (1) {
                 switch (_context5.prev = _context5.next) {
                   case 0:
-                    params = options.args[0];
-                    _context5.next = 3;
-                    return regeneratorRuntime.awrap(_this5._fsm.activate(params.camera));
+                    _context5.next = 2;
+                    return regeneratorRuntime.awrap(_this5._fsm.activate(options.args[0]));
 
-                  case 3:
+                  case 2:
                   case 'end':
                     return _context5.stop();
                 }
