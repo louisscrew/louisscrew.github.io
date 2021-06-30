@@ -33824,295 +33824,364 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function cameraName(label) {
-
-  var clean = label.replace(/\s*\([0-9a-f]+(:[0-9a-f]+)?\)\s*$/, '');
-  return clean || label || null;
+    var clean = label.replace(/\s*\([0-9a-f]+(:[0-9a-f]+)?\)\s*$/, '');
+    return clean || label || null;
 }
 
 var MediaError = function (_Error) {
-  _inherits(MediaError, _Error);
+    _inherits(MediaError, _Error);
 
-  function MediaError(type) {
-    _classCallCheck(this, MediaError);
+    function MediaError(type) {
+        _classCallCheck(this, MediaError);
 
-    var _this = _possibleConstructorReturn(this, (MediaError.__proto__ || Object.getPrototypeOf(MediaError)).call(this, 'Cannot access video stream (' + type + ').'));
+        var _this = _possibleConstructorReturn(this, (MediaError.__proto__ || Object.getPrototypeOf(MediaError)).call(this, 'Cannot access video stream (' + type + ').'));
 
-    _this.type = type;
-    return _this;
-  }
+        _this.type = type;
+        return _this;
+    }
 
-  return MediaError;
+    return MediaError;
 }(Error);
 
-var Camera = function () {
-  function Camera(id, name) {
-    _classCallCheck(this, Camera);
+//选择摄像头方案
 
-    this.id = id;
-    this.name = name;
-    this._stream = null;
-  }
 
-  _createClass(Camera, [{
-    key: 'start',
-    value: function start() {
-      var _this2 = this;
-
-      var constraints;
-      return regeneratorRuntime.async(function start$(_context2) {
+var narrowDownFacingMode = function _callee(camera) {
+    var devices, frontCamera, rearCamera;
+    return regeneratorRuntime.async(function _callee$(_context) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              constraints = {
-                audio: false,
-                video: {
-                  mandatory: {
-                    sourceId: this.id,
-                    minWidth: 600,
-                    maxWidth: 800,
-                    minAspectRatio: 1.6
-                  },
-                  optional: []
-                }
-              };
-              _context2.next = 3;
-              return regeneratorRuntime.awrap(Camera._wrapErrors(function _callee() {
-                return regeneratorRuntime.async(function _callee$(_context) {
-                  while (1) {
-                    switch (_context.prev = _context.next) {
-                      case 0:
-                        _context.next = 2;
-                        return regeneratorRuntime.awrap(navigator.mediaDevices.getUserMedia(constraints));
+            switch (_context.prev = _context.next) {
+                case 0:
+                    _context.next = 2;
+                    return regeneratorRuntime.awrap(navigator.mediaDevices.enumerateDevices());
 
-                      case 2:
-                        return _context.abrupt('return', _context.sent);
+                case 2:
+                    _context.t0 = function (_ref) {
+                        var kind = _ref.kind;
+                        return kind === 'videoinput';
+                    };
 
-                      case 3:
-                      case 'end':
-                        return _context.stop();
-                    }
-                  }
-                }, null, _this2);
-              }));
+                    devices = _context.sent.filter(_context.t0);
 
-            case 3:
-              this._stream = _context2.sent;
-              return _context2.abrupt('return', this._stream);
-
-            case 5:
-            case 'end':
-              return _context2.stop();
-          }
-        }
-      }, null, this);
-    }
-  }, {
-    key: 'stop',
-    value: function stop() {
-      if (!this._stream) {
-        return;
-      }
-
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this._stream.getVideoTracks()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var stream = _step.value;
-
-          stream.stop();
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      this._stream = null;
-    }
-  }], [{
-    key: 'getCameras',
-    value: function getCameras() {
-      var devices, res, i, d;
-      return regeneratorRuntime.async(function getCameras$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.next = 2;
-              return regeneratorRuntime.awrap(this._ensureAccess());
-
-            case 2:
-              _context3.next = 4;
-              return regeneratorRuntime.awrap(navigator.mediaDevices.enumerateDevices());
-
-            case 4:
-              _context3.t0 = function (_ref) {
-                var kind = _ref.kind;
-                return kind === "videoinput";
-              };
-
-              devices = _context3.sent.filter(_context3.t0);
-              res = [];
-              //这里区分前置还是后置的摄像头
-
-              if (devices.length >= 2) {
-                //第一个就是前置摄像头，最后一个就是后置摄像头
-                for (i = 0; i < devices.length; i++) {
-                  d = devices[i];
-
-                  if (i === 0) {
-                    res.push(new Camera(d.deviceId, 'Front'));
-                  } else if (i === devices.length - 1) {
-                    res.push(new Camera(d.deviceId, 'Back'));
-                  } else {
-                    res.push(new Camera(d.deviceId, cameraName(d.label)));
-                  }
-                }
-              } else {
-                res = devices.map(function (d) {
-                  return new Camera(d.deviceId, cameraName(d.label));
-                });
-              }
-              return _context3.abrupt('return', res);
-
-            case 9:
-            case 'end':
-              return _context3.stop();
-          }
-        }
-      }, null, this);
-    }
-  }, {
-    key: '_ensureAccess',
-    value: function _ensureAccess() {
-      var _this3 = this;
-
-      return regeneratorRuntime.async(function _ensureAccess$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              _context5.next = 2;
-              return regeneratorRuntime.awrap(this._wrapErrors(function _callee2() {
-                var access, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, stream;
-
-                return regeneratorRuntime.async(function _callee2$(_context4) {
-                  while (1) {
-                    switch (_context4.prev = _context4.next) {
-                      case 0:
-                        _context4.next = 2;
-                        return regeneratorRuntime.awrap(navigator.mediaDevices.getUserMedia({ video: true }));
-
-                      case 2:
-                        access = _context4.sent;
-                        _iteratorNormalCompletion2 = true;
-                        _didIteratorError2 = false;
-                        _iteratorError2 = undefined;
-                        _context4.prev = 6;
-
-                        for (_iterator2 = access.getVideoTracks()[Symbol.iterator](); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                          stream = _step2.value;
-
-                          stream.stop();
-                        }
-                        _context4.next = 14;
+                    if (!(devices.length > 2)) {
+                        _context.next = 16;
                         break;
-
-                      case 10:
-                        _context4.prev = 10;
-                        _context4.t0 = _context4['catch'](6);
-                        _didIteratorError2 = true;
-                        _iteratorError2 = _context4.t0;
-
-                      case 14:
-                        _context4.prev = 14;
-                        _context4.prev = 15;
-
-                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                          _iterator2.return();
-                        }
-
-                      case 17:
-                        _context4.prev = 17;
-
-                        if (!_didIteratorError2) {
-                          _context4.next = 20;
-                          break;
-                        }
-
-                        throw _iteratorError2;
-
-                      case 20:
-                        return _context4.finish(17);
-
-                      case 21:
-                        return _context4.finish(14);
-
-                      case 22:
-                      case 'end':
-                        return _context4.stop();
                     }
-                  }
-                }, null, _this3, [[6, 10, 14, 22], [15,, 17, 21]]);
-              }));
 
-            case 2:
-              return _context5.abrupt('return', _context5.sent);
+                    frontCamera = devices[0];
+                    rearCamera = devices[devices.length - 1];
+                    _context.t1 = camera;
+                    _context.next = _context.t1 === 'auto' ? 10 : _context.t1 === 'rear' ? 11 : _context.t1 === 'front' ? 12 : 13;
+                    break;
 
-            case 3:
-            case 'end':
-              return _context5.stop();
-          }
+                case 10:
+                    return _context.abrupt('return', { deviceId: { exact: rearCamera.deviceId } });
+
+                case 11:
+                    return _context.abrupt('return', { deviceId: { exact: rearCamera.deviceId } });
+
+                case 12:
+                    return _context.abrupt('return', { deviceId: { exact: frontCamera.deviceId } });
+
+                case 13:
+                    return _context.abrupt('return', undefined);
+
+                case 14:
+                    _context.next = 23;
+                    break;
+
+                case 16:
+                    _context.t2 = camera;
+                    _context.next = _context.t2 === 'auto' ? 19 : _context.t2 === 'rear' ? 20 : _context.t2 === 'front' ? 21 : 22;
+                    break;
+
+                case 19:
+                    return _context.abrupt('return', { facingMode: { ideal: 'environment' } });
+
+                case 20:
+                    return _context.abrupt('return', { facingMode: { exact: 'environment' } });
+
+                case 21:
+                    return _context.abrupt('return', { facingMode: { exact: 'user' } });
+
+                case 22:
+                    return _context.abrupt('return', undefined);
+
+                case 23:
+                case 'end':
+                    return _context.stop();
+            }
         }
-      }, null, this);
+    }, null, undefined);
+};
+
+var Camera = function () {
+    function Camera(id, name) {
+        _classCallCheck(this, Camera);
+
+        this.id = id;
+        this.name = name;
+        this._stream = null;
     }
-  }, {
-    key: '_wrapErrors',
-    value: function _wrapErrors(fn) {
-      return regeneratorRuntime.async(function _wrapErrors$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              _context6.prev = 0;
-              _context6.next = 3;
-              return regeneratorRuntime.awrap(fn());
 
-            case 3:
-              return _context6.abrupt('return', _context6.sent);
+    _createClass(Camera, [{
+        key: 'start',
+        value: function start() {
+            var _this2 = this;
 
-            case 6:
-              _context6.prev = 6;
-              _context6.t0 = _context6['catch'](0);
+            var camera = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "auto";
+            var vopts, opts, constraints;
+            return regeneratorRuntime.async(function start$(_context3) {
+                while (1) {
+                    switch (_context3.prev = _context3.next) {
+                        case 0:
+                            vopts = narrowDownFacingMode(camera);
+                            opts = {
+                                width: { min: 360, ideal: 640, max: 1920 },
+                                height: { min: 240, ideal: 480, max: 1080 }
+                            };
 
-              if (!_context6.t0.name) {
-                _context6.next = 12;
-                break;
-              }
+                            opts = Object.assign({}, opts, vopts);
+                            constraints = {
+                                audio: false,
+                                video: opts
+                            };
 
-              throw new MediaError(_context6.t0.name);
+                            console.log(constraints);
+                            _context3.next = 7;
+                            return regeneratorRuntime.awrap(Camera._wrapErrors(function _callee2() {
+                                return regeneratorRuntime.async(function _callee2$(_context2) {
+                                    while (1) {
+                                        switch (_context2.prev = _context2.next) {
+                                            case 0:
+                                                _context2.next = 2;
+                                                return regeneratorRuntime.awrap(navigator.mediaDevices.getUserMedia(constraints));
 
-            case 12:
-              throw _context6.t0;
+                                            case 2:
+                                                return _context2.abrupt('return', _context2.sent);
 
-            case 13:
-            case 'end':
-              return _context6.stop();
-          }
+                                            case 3:
+                                            case 'end':
+                                                return _context2.stop();
+                                        }
+                                    }
+                                }, null, _this2);
+                            }));
+
+                        case 7:
+                            this._stream = _context3.sent;
+                            return _context3.abrupt('return', this._stream);
+
+                        case 9:
+                        case 'end':
+                            return _context3.stop();
+                    }
+                }
+            }, null, this);
         }
-      }, null, this, [[0, 6]]);
-    }
-  }]);
+    }, {
+        key: 'stop',
+        value: function stop() {
+            if (!this._stream) {
+                return;
+            }
 
-  return Camera;
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = this._stream.getVideoTracks()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var stream = _step.value;
+
+                    stream.stop();
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            this._stream = null;
+        }
+    }], [{
+        key: 'getCameras',
+        value: function getCameras() {
+            var devices, res, i, d;
+            return regeneratorRuntime.async(function getCameras$(_context4) {
+                while (1) {
+                    switch (_context4.prev = _context4.next) {
+                        case 0:
+                            _context4.next = 2;
+                            return regeneratorRuntime.awrap(this._ensureAccess());
+
+                        case 2:
+                            _context4.next = 4;
+                            return regeneratorRuntime.awrap(navigator.mediaDevices.enumerateDevices());
+
+                        case 4:
+                            _context4.t0 = function (_ref2) {
+                                var kind = _ref2.kind;
+                                return kind === 'videoinput';
+                            };
+
+                            devices = _context4.sent.filter(_context4.t0);
+                            res = [];
+                            //第一个就是前置摄像头，最后一个就是后置摄像头
+
+                            for (i = 0; i < devices.length; i++) {
+                                d = devices[i];
+
+                                if (i === 0) {
+                                    //前置摄像头
+                                    res.push(new Camera(d.deviceId, 'front'));
+                                } else if (i === devices.length - 1) {
+                                    //后置摄像头
+                                    res.push(new Camera(d.deviceId, 'rear'));
+                                } else {
+                                    //辅助摄像头
+                                    res.push(new Camera(d.deviceId, 'auxiliary'));
+                                }
+                            }
+                            return _context4.abrupt('return', res);
+
+                        case 9:
+                        case 'end':
+                            return _context4.stop();
+                    }
+                }
+            }, null, this);
+        }
+    }, {
+        key: '_ensureAccess',
+        value: function _ensureAccess() {
+            var _this3 = this;
+
+            return regeneratorRuntime.async(function _ensureAccess$(_context6) {
+                while (1) {
+                    switch (_context6.prev = _context6.next) {
+                        case 0:
+                            _context6.next = 2;
+                            return regeneratorRuntime.awrap(this._wrapErrors(function _callee3() {
+                                var access, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, stream;
+
+                                return regeneratorRuntime.async(function _callee3$(_context5) {
+                                    while (1) {
+                                        switch (_context5.prev = _context5.next) {
+                                            case 0:
+                                                _context5.next = 2;
+                                                return regeneratorRuntime.awrap(navigator.mediaDevices.getUserMedia({ video: true }));
+
+                                            case 2:
+                                                access = _context5.sent;
+                                                _iteratorNormalCompletion2 = true;
+                                                _didIteratorError2 = false;
+                                                _iteratorError2 = undefined;
+                                                _context5.prev = 6;
+
+                                                for (_iterator2 = access.getVideoTracks()[Symbol.iterator](); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                                    stream = _step2.value;
+
+                                                    stream.stop();
+                                                }
+                                                _context5.next = 14;
+                                                break;
+
+                                            case 10:
+                                                _context5.prev = 10;
+                                                _context5.t0 = _context5['catch'](6);
+                                                _didIteratorError2 = true;
+                                                _iteratorError2 = _context5.t0;
+
+                                            case 14:
+                                                _context5.prev = 14;
+                                                _context5.prev = 15;
+
+                                                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                                    _iterator2.return();
+                                                }
+
+                                            case 17:
+                                                _context5.prev = 17;
+
+                                                if (!_didIteratorError2) {
+                                                    _context5.next = 20;
+                                                    break;
+                                                }
+
+                                                throw _iteratorError2;
+
+                                            case 20:
+                                                return _context5.finish(17);
+
+                                            case 21:
+                                                return _context5.finish(14);
+
+                                            case 22:
+                                            case 'end':
+                                                return _context5.stop();
+                                        }
+                                    }
+                                }, null, _this3, [[6, 10, 14, 22], [15,, 17, 21]]);
+                            }));
+
+                        case 2:
+                            return _context6.abrupt('return', _context6.sent);
+
+                        case 3:
+                        case 'end':
+                            return _context6.stop();
+                    }
+                }
+            }, null, this);
+        }
+    }, {
+        key: '_wrapErrors',
+        value: function _wrapErrors(fn) {
+            return regeneratorRuntime.async(function _wrapErrors$(_context7) {
+                while (1) {
+                    switch (_context7.prev = _context7.next) {
+                        case 0:
+                            _context7.prev = 0;
+                            _context7.next = 3;
+                            return regeneratorRuntime.awrap(fn());
+
+                        case 3:
+                            return _context7.abrupt('return', _context7.sent);
+
+                        case 6:
+                            _context7.prev = 6;
+                            _context7.t0 = _context7['catch'](0);
+
+                            if (!_context7.t0.name) {
+                                _context7.next = 12;
+                                break;
+                            }
+
+                            throw new MediaError(_context7.t0.name);
+
+                        case 12:
+                            throw _context7.t0;
+
+                        case 13:
+                        case 'end':
+                            return _context7.stop();
+                    }
+                }
+            }, null, this, [[0, 6]]);
+        }
+    }]);
+
+    return Camera;
 }();
 
 module.exports = Camera;
@@ -34527,13 +34596,15 @@ var Scanner = function (_EventEmitter) {
               while (1) {
                 switch (_context4.prev = _context4.next) {
                   case 0:
-                    _context4.next = 2;
+                    alert('111----' + options.args[0]);
+                    console.log(options.args[0]);
+                    _context4.next = 4;
                     return regeneratorRuntime.awrap(_this5._enableScan(options.args[0]));
 
-                  case 2:
+                  case 4:
                     _this5.emit('active');
 
-                  case 3:
+                  case 5:
                   case 'end':
                     return _context4.stop();
                 }
