@@ -34447,35 +34447,42 @@ var Scanner = function (_EventEmitter) {
     value: function scan() {
       return this._scanner.scan();
     }
+    //update by wenquan 添加摄像头启动类型，auto为后置摄像头，rear为后置摄像头，front为前置摄像头
+
   }, {
     key: 'start',
     value: function start() {
       var camera = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var cameraType = arguments[1];
       return regeneratorRuntime.async(function start$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              if (!cameraType) {
+                cameraType = "auto";
+              }
+
               if (!this._fsm.can('start')) {
-                _context.next = 5;
+                _context.next = 6;
                 break;
               }
 
-              _context.next = 3;
-              return regeneratorRuntime.awrap(this._fsm.start(camera));
+              _context.next = 4;
+              return regeneratorRuntime.awrap(this._fsm.start(camera, cameraType));
 
-            case 3:
-              _context.next = 9;
+            case 4:
+              _context.next = 10;
               break;
 
-            case 5:
-              _context.next = 7;
+            case 6:
+              _context.next = 8;
               return regeneratorRuntime.awrap(this._fsm.stop());
 
-            case 7:
-              _context.next = 9;
-              return regeneratorRuntime.awrap(this._fsm.start(camera));
+            case 8:
+              _context.next = 10;
+              return regeneratorRuntime.awrap(this._fsm.start(camera, cameraType));
 
-            case 9:
+            case 10:
             case 'end':
               return _context.stop();
           }
@@ -34506,7 +34513,7 @@ var Scanner = function (_EventEmitter) {
     }
   }, {
     key: '_enableScan',
-    value: function _enableScan(camera) {
+    value: function _enableScan(camera, cameraType) {
       var stream;
       return regeneratorRuntime.async(function _enableScan$(_context3) {
         while (1) {
@@ -34522,10 +34529,11 @@ var Scanner = function (_EventEmitter) {
               throw new Error('Camera is not defined.');
 
             case 3:
-              _context3.next = 5;
-              return regeneratorRuntime.awrap(this._camera.start());
+              console.log("摄像头类型：" + cameraType);
+              _context3.next = 6;
+              return regeneratorRuntime.awrap(this._camera.start(cameraType));
 
-            case 5:
+            case 6:
               stream = _context3.sent;
 
               this.video.srcObject = stream;
@@ -34534,7 +34542,7 @@ var Scanner = function (_EventEmitter) {
                 this._scanner.start();
               }
 
-            case 8:
+            case 9:
             case 'end':
               return _context3.stop();
           }
@@ -34606,9 +34614,9 @@ var Scanner = function (_EventEmitter) {
                 switch (_context4.prev = _context4.next) {
                   case 0:
                     alert('111----' + options.args[0]);
-                    console.log(options.args[0]);
+                    console.log(options.args[0], options.args[1]);
                     _context4.next = 4;
-                    return regeneratorRuntime.awrap(_this5._enableScan(options.args[0]));
+                    return regeneratorRuntime.awrap(_this5._enableScan(options.args[0], options.args[1]));
 
                   case 4:
                     _this5.emit('active');
