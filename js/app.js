@@ -26,10 +26,10 @@ var app = new Vue({
                 }
                 if (cameras.length > 1) {//取后置摄像头
                     alert("多个摄像头22")
-                    let tmpCamera = self.cameras[0]
-                    // let tmpCamera = self.cameras.find((ca) => {
-                    //     return ca.name.includes("后置")===true || ca.name.includes("Back")===true
-                    // })
+                    // let tmpCamera = self.cameras[0]
+                    let tmpCamera = self.cameras.find((ca) => {
+                        return ca.name.includes("后置")===true || ca.name.includes("Back")===true
+                    })
                     if (tmpCamera) {
                         self.activeCamera = tmpCamera
                     }
